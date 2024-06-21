@@ -2,16 +2,16 @@ package com.ezgroceries.shoppinglist.model;
 
 import java.util.ArrayList;
 
-public class Cocktail {
-    private String cocktailId;
+public class CocktailDTO {
+    private String id;
     private String name;
     private String glass;
     private String instructions;
     private String image;
     private ArrayList<String> ingredients;
 
-    public Cocktail(String cocktailId, String name, String glass, String instructions, String image, ArrayList<String> ingredients) {
-        this.cocktailId = cocktailId;
+    public CocktailDTO(String id, String name, String glass, String instructions, String image, ArrayList<String> ingredients) {
+        this.id = id;
         this.name = name;
         this.glass = glass;
         this.instructions = instructions;
@@ -19,12 +19,12 @@ public class Cocktail {
         this.ingredients = ingredients;
     }
 
-    public String getCocktailId() {
-        return cocktailId;
+    public String getId() {
+        return id;
     }
 
-    public void setCocktailId(String cocktailId) {
-        this.cocktailId = cocktailId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
