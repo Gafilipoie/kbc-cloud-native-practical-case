@@ -44,7 +44,7 @@ public class CocktailsController {
 
     @PostMapping(value = "/cocktails/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<CocktailDTO> createCocktails(@RequestBody CocktailDTO cocktail, HttpServletRequest request) {
+    public ResponseEntity<CocktailDTO> createCocktail(@RequestBody CocktailDTO cocktail, HttpServletRequest request) {
         logger.info("<------ User created Cocktail ------>");
         cocktail.setId(UUID.randomUUID().toString());
         cocktailsService.addItem(cocktail);

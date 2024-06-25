@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class ShoppingListDTO {
     String id;
     String name;
-
     ArrayList<String> ingredients = new ArrayList<>();
 
     public String getId() {
@@ -19,6 +18,10 @@ public class ShoppingListDTO {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ArrayList<String> getIngredients() {
