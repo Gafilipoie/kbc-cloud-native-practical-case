@@ -5,7 +5,6 @@ import com.ezgroceries.shoppinglist.services.CocktailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +20,16 @@ import java.util.UUID;
 public class CocktailsController {
     private final static Logger logger = LoggerFactory.getLogger(CocktailsController.class);
 
-    @Autowired
-    CocktailsService cocktailsService;
+    private final CocktailsService cocktailsService;
+
+    public CocktailsController(CocktailsService cocktailsService) {
+        this.cocktailsService = cocktailsService;
+    }
 
     @GetMapping("/cocktails")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ArrayList<CocktailDTO>> getCocktails(@RequestParam(required = false) String search) {
-        logger.info("<------ User requested cocktails ------>");
+        logger.info("Getting list of all cocktails containing : {}", search);
         return new ResponseEntity<>(cocktailsService.getList(), HttpStatus.OK);
     }
 

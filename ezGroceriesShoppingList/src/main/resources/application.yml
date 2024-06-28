@@ -1,0 +1,35 @@
+cocktail-service-client:
+  name: cocktailDBClient
+  domain-url: https://www.thecocktaildb.com/api/json/v1/1
+  retrieve-cocktail:
+    url: search.php
+
+
+spring:
+  cloud:
+    openfeign:
+      httpclient:
+        disable-ssl-validation: true
+        hc5:
+          enabled: true
+
+# TLS settings
+#server:
+#  port: 8081
+#  http:
+#    port: 8080
+#  ssl:
+#    enabled: true
+#    key-alias: localhost
+#    key-store: classpath:keystore/local-keystore.jks
+#    key-store-password: hunter2
+#    key-store-type: JKS
+#    trust-store: classpath:keystore/local-truststore.jks
+#    trust-store-password: hunter2
+#    client-auth: need
+
+#logging:
+#  level:
+#    com:
+#      ezgroceries:
+#        shoppinglist: DEBUG

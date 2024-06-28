@@ -1,15 +1,22 @@
 package com.ezgroceries.shoppinglist.services;
 
+import com.ezgroceries.shoppinglist.client.CocktailDBClient;
+import com.ezgroceries.shoppinglist.model.CocktailDBResponse;
 import com.ezgroceries.shoppinglist.model.CocktailDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class CocktailsService {
+    private final CocktailDBClient cocktailDBClient;
+
     private final ArrayList<CocktailDTO> cocktailsList = new ArrayList<>();
 
     public ArrayList<CocktailDTO> getList() {
+        CocktailDBResponse cocktailDBResponse = cocktailDBClient.searchCocktails("search");
         return cocktailsList;
     }
 
