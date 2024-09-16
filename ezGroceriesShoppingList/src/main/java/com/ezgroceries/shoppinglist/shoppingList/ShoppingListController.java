@@ -31,17 +31,17 @@ public class ShoppingListController {
 
     @GetMapping("/shopping-list")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ArrayList<ShoppingListDTO>> getShoppingLists() {
+    public ResponseEntity<ArrayList<EzGroceriesShoppingListApplication.ShoppingListDTO>> getShoppingLists() {
         logger.info("<------ User requested shopping-lists ------>");
         return new ResponseEntity<>(shoppingListService.getList(), HttpStatus.OK);
     }
 
     @GetMapping("/shopping-list/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<ShoppingListDTO> getShoppingList(@PathVariable String id) {
+    public ResponseEntity<EzGroceriesShoppingListApplication.ShoppingListDTO> getShoppingList(@PathVariable String id) {
         if (shoppingListService.hasItem(id)) {
             logger.info("<------ User requested Shopping List ------>");
-            final ShoppingListDTO shoppingList = shoppingListService.getItem(id);
+            final EzGroceriesShoppingListApplication.ShoppingListDTO shoppingList = shoppingListService.getItem(id);
             return new ResponseEntity<>(shoppingList, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -49,7 +49,7 @@ public class ShoppingListController {
 
     @PostMapping(value = "/shopping-list/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ShoppingListDTO> createShoppingList(@RequestBody ShoppingListDTO shoppingList, HttpServletRequest request) {
+    public ResponseEntity<EzGroceriesShoppingListApplication.ShoppingListDTO> createShoppingList(@RequestBody EzGroceriesShoppingListApplication.ShoppingListDTO shoppingList, HttpServletRequest request) {
         logger.info("<------ User created Shopping List ------>");
         shoppingList.setId(UUID.randomUUID().toString());
         shoppingListService.addItem(shoppingList);
