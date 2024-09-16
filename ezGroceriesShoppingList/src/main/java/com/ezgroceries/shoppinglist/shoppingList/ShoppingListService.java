@@ -1,7 +1,8 @@
-package com.ezgroceries.shoppinglist.services;
+package com.ezgroceries.shoppinglist.shoppingList;
 
-import com.ezgroceries.shoppinglist.model.CocktailDTO;
-import com.ezgroceries.shoppinglist.model.ShoppingListDTO;
+//import com.ezgroceries.shoppinglist.cocktail.CocktailDTO;
+import com.ezgroceries.shoppinglist.EzGroceriesShoppingListApplication;
+import com.ezgroceries.shoppinglist.cocktail.CocktailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 @Service
 public class ShoppingListService {
     @Autowired
-    CocktailsService cocktailsService;
+    CocktailService cocktailsService;
 
     private final ArrayList<ShoppingListDTO> shoppingList = new ArrayList<>();
 
@@ -33,20 +34,20 @@ public class ShoppingListService {
         shoppingList.add(item);
     }
 
-    public void updateItem(String id, CocktailDTO cocktail) {
-        ArrayList<String> ingredients = cocktail.getIngredients();
-
-        ShoppingListDTO shoppingItem = shoppingList.stream()
-                .filter(e -> e.getId().equals(id))
-                .findAny()
-                .orElse(null);
-
-        if (shoppingItem != null) {
-            int position = shoppingList.indexOf(shoppingItem);
-            shoppingItem.setIngredients(ingredients);
-            shoppingList.set(position, shoppingItem);
-        }
-    }
+//    public void updateItem(String id, CocktailDTO cocktail) {
+//        ArrayList<String> ingredients = cocktail.getIngredients();
+//
+//        ShoppingListDTO shoppingItem = shoppingList.stream()
+//                .filter(e -> e.getId().equals(id))
+//                .findAny()
+//                .orElse(null);
+//
+//        if (shoppingItem != null) {
+//            int position = shoppingList.indexOf(shoppingItem);
+//            shoppingItem.setIngredients(ingredients);
+//            shoppingList.set(position, shoppingItem);
+//        }
+//    }
 
     public void removeItem(String id) {
         shoppingList.removeIf(e -> e.getId().equals(id));

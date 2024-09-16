@@ -1,4 +1,4 @@
-package com.ezgroceries.shoppinglist.model;
+package com.ezgroceries.shoppinglist.cocktail;
 
 public class CocktailIdDTO {
     private String cocktailId;
