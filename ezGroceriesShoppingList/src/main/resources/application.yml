@@ -4,7 +4,6 @@ cocktail-service-client:
   retrieve-cocktail:
     url: search.php
 
-
 spring:
   cloud:
     openfeign:
@@ -12,6 +11,35 @@ spring:
         disable-ssl-validation: true
         hc5:
           enabled: true
+  # Spring datasource
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: mysecretpassword
+  # The SQL dialect makes Hibernate generate better SQL for the chosen database
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        transaction:
+          jta:
+            platform: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    # Hibernate ddl auto (create, create-drop, validate, update)
+    hibernate:
+      ddl-auto: validate
+  #firefly
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+# Actuator - To further verify correct connection we're going to enable extra information on our actuator health point
+## Restart your application and go to the health endpoint http://localhost:8080/actuator/health
+management:
+  endpoint:
+    health:
+      show-details: always
 
 # TLS settings
 #server:
@@ -28,8 +56,7 @@ spring:
 #    trust-store-password: hunter2
 #    client-auth: need
 
-#logging:
-#  level:
-#    com:
-#      ezgroceries:
-#        shoppinglist: DEBUG
+logging:
+  level:
+    org:
+      flywaydb: DEBUG

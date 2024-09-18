@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig">
+    <option name="snapshotDb" value="false" />
+    <option name="snapshotModelValue" value="shopping-list:shopping-list" />
+    <option name="sourceModelValue" value="shopping-list:shopping-list" />
+    <option name="targetDbValue" value="0d1682b9-50ae-44ca-9199-482b45ad8a03" />
+  </component>
+</project>
