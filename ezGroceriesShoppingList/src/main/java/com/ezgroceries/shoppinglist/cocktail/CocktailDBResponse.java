@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 
 @Getter
+@Setter
 public class CocktailDBResponse {
     private ArrayList<DrinkResource> drinks;
 

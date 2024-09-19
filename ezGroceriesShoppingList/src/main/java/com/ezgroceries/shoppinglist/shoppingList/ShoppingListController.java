@@ -20,6 +20,18 @@ public class ShoppingListController {
     private final CocktailDBClient cocktailDBClient;
     private final ShoppingListService shoppingListService;
 
+    @GetMapping("/shopping-lists")
+    public ResponseEntity<List<ShoppingListOutputDTO>> getAllShoppingLists() {
+        log.info("Get all shopping lists");
+        return ResponseEntity.ok(shoppingListService.getAll());
+    }
+
+    @GetMapping("/shopping-lists/{shoppingListId}")
+    public ResponseEntity<ShoppingListOutputDTO> getShoppingList(@PathVariable String shoppingListId) {
+        log.info("Get shopping list with id : {}", shoppingListId);
+        return ResponseEntity.ok(shoppingListService.getById(shoppingListId));
+    }
+
     @PostMapping("/shopping-lists")
     public ResponseEntity<?> postShoppingLists(@RequestBody ShoppingListInputDTO shoppingListInputDTO) {
         log.info("Start creation of shopping list with name : {}", shoppingListInputDTO.getName());
@@ -48,17 +60,5 @@ public class ShoppingListController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
-    }
-
-    @GetMapping("/shopping-lists/{shoppingListId}")
-    public ResponseEntity<ShoppingListOutputDTO> getShoppingList(@PathVariable String shoppingListId) {
-        log.info("Get shopping list with id : {}", shoppingListId);
-        return ResponseEntity.ok(shoppingListService.getById(shoppingListId));
-    }
-
-    @GetMapping("/shopping-lists")
-    public ResponseEntity<List<ShoppingListOutputDTO>> getAllShoppingLists() {
-        log.info("Get all shopping lists");
-        return ResponseEntity.ok(shoppingListService.getAll());
     }
 }

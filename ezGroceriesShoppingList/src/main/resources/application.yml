@@ -7,6 +7,12 @@ cocktail-service-client:
 spring:
   cloud:
     openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 3000
+            read-timeout: 3000
+            logger-level: basic
       httpclient:
         disable-ssl-validation: true
         hc5:
@@ -54,3 +60,12 @@ server:
     trust-store: classpath:keystore/local-truststore.jks
     trust-store-password: hunter2
     client-auth: need
+
+logging:
+  level:
+    org:
+      flywaydb: DEBUG
+    com:
+      ezgroceries:
+        shoppinglist: DEBUG
+

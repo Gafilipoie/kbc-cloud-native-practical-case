@@ -5,10 +5,67 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 @FeignClient(name = "cocktailDBClient", url = "https://www.thecocktaildb.com/api/json/v1/1")
 public interface CocktailDBClient {
 
     @GetMapping(value = "search.php")
     CocktailDBResponse searchCocktails(@RequestParam("s") String search);
+
+    @Component
+    class CocktailDBClientFallback implements CocktailDBClient {
+
+        private final CocktailRepository cocktailRepository;
+
+        public CocktailDBClientFallback(CocktailRepository cocktailRepository) {
+            this.cocktailRepository = cocktailRepository;
+        }
+
+        @Override
+        public CocktailDBResponse searchCocktails(String search) {
+            List<CocktailEntity> cocktailEntities = cocktailRepository.findByNameContainingIgnoreCase(search);
+
+            CocktailDBResponse cocktailDBResponse = new CocktailDBResponse();
+            cocktailDBResponse.setDrinks((java.util.ArrayList<CocktailDBResponse.DrinkResource>) cocktailEntities.stream().map(cocktailEntity -> {
+                CocktailDBResponse.DrinkResource resource = new CocktailDBResponse.DrinkResource();
+                resource.setIdDrink(cocktailEntity.getIdDrink());
+                resource.setStrDrink(cocktailEntity.getName());
+                resource.setStrGlass(cocktailEntity.getGlass());
+                resource.setStrInstructions(cocktailEntity.getInstructions());
+                resource.setStrDrinkThumb(cocktailEntity.getImageLink());
+                setIngredients(resource, cocktailEntity.getIngredients());
+                return resource;
+            }).collect(Collectors.toList()));
+
+            return cocktailDBResponse;
+        }
+
+        private void setIngredients(CocktailDBResponse.DrinkResource resource, Set<String> ingredients) {
+            Iterator<String> iterator = ingredients.iterator();
+            if (!iterator.hasNext()) {
+                return;
+            }
+            resource.setStrIngredient1(iterator.next());
+
+            if (!iterator.hasNext()) {
+                return;
+            }
+            resource.setStrIngredient2(iterator.next());
+
+            if (!iterator.hasNext()) {
+                return;
+            }
+            resource.setStrIngredient3(iterator.next());
+
+            if (!iterator.hasNext()) {
+                return;
+            }
+            resource.setStrIngredient4(iterator.next());
+        }
+    }
 }
