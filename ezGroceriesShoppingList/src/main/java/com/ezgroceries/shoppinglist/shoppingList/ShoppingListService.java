@@ -1,55 +1,68 @@
 package com.ezgroceries.shoppinglist.shoppingList;
 
-//import com.ezgroceries.shoppinglist.cocktail.CocktailDTO;
-import com.ezgroceries.shoppinglist.EzGroceriesShoppingListApplication;
-import com.ezgroceries.shoppinglist.cocktail.CocktailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ezgroceries.shoppinglist.cocktail.CocktailEntity;
+import com.ezgroceries.shoppinglist.cocktail.CocktailRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ShoppingListService {
-    @Autowired
-    CocktailService cocktailsService;
 
-    private final ArrayList<ShoppingListDTO> shoppingList = new ArrayList<>();
+    private final ShoppingListRepository shoppingListRepository;
+    private final CocktailRepository cocktailRepository;
 
-    public ArrayList<ShoppingListDTO> getList() {
-        return shoppingList;
+    public ShoppingListEntity create(String name) {
+        return shoppingListRepository.save(new ShoppingListEntity(name));
     }
 
-    public ShoppingListDTO getItem(String id) {
-        return shoppingList.stream()
-            .filter(e -> e.getId().equals(id))
-            .findAny()
-            .orElse(null);
+    public void addCocktail(String shoppingListId, String cocktailId) {
+        Optional<ShoppingListEntity> shoppingListEntity = shoppingListRepository.findById(UUID.fromString(shoppingListId));
+        if (shoppingListEntity.isEmpty()) {
+            throw new IllegalArgumentException(String.format("shopping list with id : %s does not exists!", shoppingListId));
+        }
+        Optional<CocktailEntity> cocktailEntity = cocktailRepository.findById(UUID.fromString(cocktailId));
+        if (cocktailEntity.isEmpty()) {
+            throw new IllegalArgumentException(String.format("cocktail with id : %s does not exists!", cocktailId));
+        }
+
+        shoppingListEntity.get().addCocktail(cocktailEntity.get());
+        shoppingListRepository.save(shoppingListEntity.get());
     }
 
-    public boolean hasItem(String id) {
-        return shoppingList.stream().anyMatch(o -> o.getId().equals(id));
+    public ShoppingListOutputDTO getById(String shoppingListId) {
+        Optional<ShoppingListEntity> shoppingList = shoppingListRepository.findById(UUID.fromString(shoppingListId));
+        if (shoppingList.isEmpty()) {
+            throw new IllegalArgumentException(String.format("shopping list with id : %s does not exists!", shoppingListId));
+        }
+        return mapShoppingListEntityToOutput(shoppingList.get());
     }
 
-    public void addItem(ShoppingListDTO item) {
-        shoppingList.add(item);
+    public List<ShoppingListOutputDTO> getAll() {
+        List<ShoppingListEntity> shoppingListEntities = shoppingListRepository.findAll();
+        return shoppingListEntities.stream()
+                .map(this::mapShoppingListEntityToOutput)
+                .collect(Collectors.toList());
     }
 
-//    public void updateItem(String id, CocktailDTO cocktail) {
-//        ArrayList<String> ingredients = cocktail.getIngredients();
-//
-//        ShoppingListDTO shoppingItem = shoppingList.stream()
-//                .filter(e -> e.getId().equals(id))
-//                .findAny()
-//                .orElse(null);
-//
-//        if (shoppingItem != null) {
-//            int position = shoppingList.indexOf(shoppingItem);
-//            shoppingItem.setIngredients(ingredients);
-//            shoppingList.set(position, shoppingItem);
-//        }
-//    }
+    private ShoppingListOutputDTO mapShoppingListEntityToOutput(ShoppingListEntity shoppingList) {
+        return new ShoppingListOutputDTO(
+                shoppingList.getId().toString(),
+                shoppingList.getName(),
+                getUniqueIngredients(shoppingList));
+    }
 
-    public void removeItem(String id) {
-        shoppingList.removeIf(e -> e.getId().equals(id));
+    private Set<String> getUniqueIngredients(ShoppingListEntity shoppingListEntity) {
+        return shoppingListEntity.getCocktails()
+                .stream()
+                .map(CocktailEntity::getIngredients)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 }

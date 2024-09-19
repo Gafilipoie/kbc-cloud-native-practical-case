@@ -12,12 +12,19 @@ public class CocktailDBResponse {
     @Setter
     @Getter
     public static class DrinkResource {
+
         private String idDrink;
         private String strDrink;
         private String strGlass;
         private String strInstructions;
         private String strDrinkThumb;
-        private ArrayList<String> ingredients = new ArrayList<>();
+        private String strIngredient1;
+        private String strIngredient2;
+        private String strIngredient3;
+        private String strIngredient4;
+
+        public DrinkResource() {
+        }
 
         public DrinkResource(
                 String idDrink,
@@ -35,10 +42,10 @@ public class CocktailDBResponse {
             this.strGlass = strGlass;
             this.strInstructions = strInstructions;
             this.strDrinkThumb = strDrinkThumb;
-            this.ingredients.add(strIngredient1);
-            this.ingredients.add(strIngredient2);
-            if (strIngredient3 != null) this.ingredients.add(strIngredient3);
-            if (strIngredient4 != null) this.ingredients.add(strIngredient4);
+            this.strIngredient1 = strIngredient1;
+            this.strIngredient2 = strIngredient2;
+            this.strIngredient3 = strIngredient3;
+            this.strIngredient4 = strIngredient4;
         }
     }
 }

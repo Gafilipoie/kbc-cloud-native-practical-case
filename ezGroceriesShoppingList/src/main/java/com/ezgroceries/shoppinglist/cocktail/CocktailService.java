@@ -3,55 +3,83 @@ package com.ezgroceries.shoppinglist.cocktail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class CocktailService {
-//    private final ArrayList<CocktailDTO> cocktailsList = new ArrayList<>();
-    private final CocktailDBClient cocktailDBClient;
-    private final CocktailDTOMapper cocktailDTOMapper;
 
-    public List<CocktailDTO> getList(String search) {
+    private final CocktailRepository cocktailRepository;
+    private final CocktailDBClient cocktailDBClient;
+
+    public List<CocktailOutputDTO> getList(String search) {
         CocktailDBResponse cocktailDBResponse = cocktailDBClient.searchCocktails(search);
-        return cocktailDBResponse
-                .getDrinks()
+        return mergeCocktails(cocktailDBResponse.getDrinks());
+    }
+
+    public List<CocktailOutputDTO> mergeCocktails(List<CocktailDBResponse.DrinkResource> drinks) {
+        //Get all the idDrink attributes
+        List<String> ids = drinks
                 .stream()
-                .map(cocktailDTOMapper)
+                .map(CocktailDBResponse.DrinkResource::getIdDrink)
+                .collect(Collectors.toList());
+
+        //Get all the ones we already have from our DB, use a Map for convenient lookup
+        Map<String, CocktailEntity> existingEntityMap = cocktailRepository
+                .findByIdDrinkIn(ids)
+                .stream()
+                .collect(Collectors.toMap(CocktailEntity::getIdDrink, o -> o, (o, o2) -> o));
+
+        //Stream over all the drinks, map them to the existing ones, persist a new one if not existing
+        Map<String, CocktailEntity> allEntityMap = drinks
+                .stream()
+                .map(drinkResource -> {
+                    CocktailEntity cocktailEntity = existingEntityMap.get(drinkResource.getIdDrink());
+                    if (cocktailEntity == null) {
+                        CocktailEntity newCocktailEntity = new CocktailEntity();
+                        newCocktailEntity.setId(UUID.randomUUID());
+                        newCocktailEntity.setIdDrink(drinkResource.getIdDrink());
+                        newCocktailEntity.setName(drinkResource.getStrDrink());
+                        newCocktailEntity.setGlass(drinkResource.getStrGlass());
+                        newCocktailEntity.setInstructions(drinkResource.getStrInstructions());
+                        newCocktailEntity.setImageLink(drinkResource.getStrDrinkThumb());
+                        newCocktailEntity.setIngredients(getIngredients(drinkResource));
+                        cocktailEntity = cocktailRepository.save(newCocktailEntity);
+                    }
+                    return cocktailEntity;
+                })
+                .collect(Collectors.toMap(CocktailEntity::getIdDrink,o -> o, (o,o2) -> o));
+
+        //Merge drinks and our entities, transform to CocktailResource instances
+        return mergeAndTransform(drinks, allEntityMap);
+    }
+
+    private List<CocktailOutputDTO> mergeAndTransform(
+            List<CocktailDBResponse.DrinkResource> drinks,
+            Map<String, CocktailEntity> allEntityMap
+    ) {
+        return drinks
+                .stream()
+                .map(drinkResource -> new CocktailOutputDTO(
+                        allEntityMap.get(drinkResource.getIdDrink()).getId().toString(),
+                        drinkResource.getStrDrink(),
+                        drinkResource.getStrGlass(),
+                        drinkResource.getStrInstructions(),
+                        drinkResource.getStrDrinkThumb(),
+                        getIngredients(drinkResource)
+                ))
                 .collect(Collectors.toList());
     }
 
-//    public CocktailDTO getItem(String id) {
-//        return cocktailsList.stream()
-//            .filter(e -> e.getId().equals(id))
-//            .findAny()
-//            .orElse(null);
-//    }
-//
-//    public boolean hasItem(String id) {
-//        return cocktailsList.stream().anyMatch(o -> o.getId().equals(id));
-//    }
-//
-//    public void addItem(CocktailDTO item) {
-//        cocktailsList.add(item);
-//    }
-//
-//    public void updateItem(String id, CocktailDTO newItem) {
-//        CocktailDTO cocktail = cocktailsList.stream()
-//                .filter(e -> e.getId().equals(id))
-//                .findAny()
-//                .orElse(null);
-//
-//        if (cocktail != null) {
-//            int position = cocktailsList.indexOf(cocktail);
-//            cocktailsList.set(position, newItem);
-//        }
-//
-//    }
-//
-//    public void removeItem(String id) {
-//        cocktailsList.removeIf(e -> e.getId().equals(id));
-//    }
+    private Set<String> getIngredients(CocktailDBResponse.DrinkResource drinkResource) {
+        return Stream.of(drinkResource.getStrIngredient1(),
+                        drinkResource.getStrIngredient2(),
+                        drinkResource.getStrIngredient3(),
+                        drinkResource.getStrIngredient4())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
 }
 
