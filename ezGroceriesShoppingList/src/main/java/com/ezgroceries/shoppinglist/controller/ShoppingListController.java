@@ -1,7 +1,11 @@
-package com.ezgroceries.shoppinglist.shoppingList;
+package com.ezgroceries.shoppinglist.controller;
 
-import com.ezgroceries.shoppinglist.cocktail.CocktailDBClient;
-import com.ezgroceries.shoppinglist.cocktail.CocktailInputDTO;
+import com.ezgroceries.shoppinglist.client.CocktailDBClient;
+import com.ezgroceries.shoppinglist.model.CocktailInputDTO;
+import com.ezgroceries.shoppinglist.entity.ShoppingListEntity;
+import com.ezgroceries.shoppinglist.model.ShoppingListInputDTO;
+import com.ezgroceries.shoppinglist.model.ShoppingListOutputDTO;
+import com.ezgroceries.shoppinglist.service.ShoppingListService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

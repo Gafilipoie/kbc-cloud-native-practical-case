@@ -1,5 +1,6 @@
-package com.ezgroceries.shoppinglist.shoppingList;
+package com.ezgroceries.shoppinglist.repository;
 
+import com.ezgroceries.shoppinglist.entity.ShoppingListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

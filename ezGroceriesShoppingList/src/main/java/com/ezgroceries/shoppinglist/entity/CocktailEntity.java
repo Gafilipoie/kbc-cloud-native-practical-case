@@ -1,7 +1,6 @@
-package com.ezgroceries.shoppinglist.cocktail;
+package com.ezgroceries.shoppinglist.entity;
 
 import com.ezgroceries.shoppinglist.util.StringSetConverter;
-import com.ezgroceries.shoppinglist.shoppingList.ShoppingListEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

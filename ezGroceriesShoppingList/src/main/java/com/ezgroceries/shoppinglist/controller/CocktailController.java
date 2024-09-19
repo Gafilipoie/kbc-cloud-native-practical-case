@@ -1,9 +1,12 @@
-package com.ezgroceries.shoppinglist.cocktail;
+package com.ezgroceries.shoppinglist.controller;
 
+import com.ezgroceries.shoppinglist.client.CocktailDBClient;
+import com.ezgroceries.shoppinglist.model.CocktailDBResponse;
+import com.ezgroceries.shoppinglist.model.CocktailOutputDTO;
+import com.ezgroceries.shoppinglist.service.CocktailService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

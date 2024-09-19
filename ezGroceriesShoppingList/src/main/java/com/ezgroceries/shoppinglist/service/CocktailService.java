@@ -1,5 +1,10 @@
-package com.ezgroceries.shoppinglist.cocktail;
+package com.ezgroceries.shoppinglist.service;
 
+import com.ezgroceries.shoppinglist.client.CocktailDBClient;
+import com.ezgroceries.shoppinglist.entity.CocktailEntity;
+import com.ezgroceries.shoppinglist.model.CocktailDBResponse;
+import com.ezgroceries.shoppinglist.model.CocktailOutputDTO;
+import com.ezgroceries.shoppinglist.repository.CocktailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

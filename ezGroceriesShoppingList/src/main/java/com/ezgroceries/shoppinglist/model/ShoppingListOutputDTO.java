@@ -1,4 +1,4 @@
-package com.ezgroceries.shoppinglist.shoppingList;
+package com.ezgroceries.shoppinglist.model;
 
 import lombok.Getter;
 import lombok.Setter;
