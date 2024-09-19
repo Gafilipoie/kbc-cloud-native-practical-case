@@ -5,6 +5,7 @@ import com.ezgroceries.shoppinglist.repository.CocktailRepository;
 import com.ezgroceries.shoppinglist.entity.ShoppingListEntity;
 import com.ezgroceries.shoppinglist.model.ShoppingListOutputDTO;
 import com.ezgroceries.shoppinglist.repository.ShoppingListRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
