@@ -42,21 +42,15 @@ management:
       show-details: always
 
 # TLS settings
-#server:
-#  port: 8081
-#  http:
-#    port: 8080
-#  ssl:
-#    enabled: true
-#    key-alias: localhost
-#    key-store: classpath:keystore/local-keystore.jks
-#    key-store-password: hunter2
-#    key-store-type: JKS
-#    trust-store: classpath:keystore/local-truststore.jks
-#    trust-store-password: hunter2
-#    client-auth: need
-
-logging:
-  level:
-    org:
-      flywaydb: DEBUG
+server:
+  port: 8443
+  http:
+    port: 8080
+  ssl:
+    enabled: true
+    key-store: classpath:keystore/local-keystore.jks
+    key-store-password: hunter2
+    key-alias: localhost
+    trust-store: classpath:keystore/local-truststore.jks
+    trust-store-password: hunter2
+    client-auth: need
